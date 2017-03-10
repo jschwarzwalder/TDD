@@ -1,3 +1,7 @@
+# to run Django type in
+# python manage.py runserver
+# cd Documents/GitHub/TDD/superlists
+
 import unittest
 from selenium import webdriver
 
@@ -16,8 +20,15 @@ class NewVisitorTest(unittest.TestCase):
 		browser.get('http://localhost:8000')
 
 		#She notices the page title and header mention to-do lists
-		assert 'To-Do' in browser.title, "Browser title was " + browser.title
-
+		self.assertIn('To-Do', self.browser.title)  
+		# We use self.assertIn instead of just assert to make our test assertions. 
+		# unittest provides lots of helper functions like this to make test assertions, 
+		#  like assertEqual, assertTrue, assertFalse
+		# Unit Test Documentation http://docs.python.org/3/library/unittest.html 
+		
+		#This will always fail
+        self.fail('Finish the test!') 
+		
 		#She does other stuff
 
 		# She is invited to enter a to-do item straight away
@@ -46,7 +57,3 @@ class NewVisitorTest(unittest.TestCase):
 		
 if __name__ == '__main__':  
     unittest.main(warnings='ignore')
-
-#To run Django type in
-# python manage.py runserver
-# cd Documents/GitHub/TDD/superlists
