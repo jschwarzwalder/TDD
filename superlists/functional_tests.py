@@ -15,19 +15,20 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         #Edith goes to cool new todo list app homepage
-            browser = webdriver.Firefox()
+          
         
-            browser.get('http://localhost:8000')
+            self.browser.get('http://localhost:8000')
         
         #She notices the page title and header mention to-do lists
-            self.assertIn('To-Do', self.browser.title)  
+            self.assertIn('To-Do-Lists', self.browser.title)  
+        
         # We use self.assertIn instead of just assert to make our test assertions. 
         # unittest provides lots of helper functions like this to make test assertions, 
         #  like assertEqual, assertTrue, assertFalse
         # Unit Test Documentation http://docs.python.org/3/library/unittest.html 
         
         #This will always fail
-            self.fail('Finish the test!') 
+            
         
         #She does other stuff
         
@@ -53,7 +54,7 @@ class NewVisitorTest(unittest.TestCase):
         # Satisfied, she goes back to sleep
         
         
-            browser.quit()
+            
         
 if __name__ == '__main__':  
     unittest.main(warnings='ignore')
