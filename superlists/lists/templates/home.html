@@ -4,7 +4,10 @@
     </head>
     <body>
         <h1>Start a new To-Do List</h1>
-        <input id="id_new_item"  placeholder="Enter a to-do item" />
+        <form method="POST">
+            {% csrf_token %}
+            <input id="id_new_item"  placeholder="Enter a to-do item" />
+        </form>
         
         <table id="id_list_table">
             <tr><td>1: Buy peacock feathers</td></tr>
