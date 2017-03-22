@@ -30,4 +30,13 @@ class HomePageTest(TestCase):
                     
         expected_content = render_to_string('home.html', request=request)
         self.assertEqualExceptCSRF(response.content.decode(), expected_content)
+        
+    def test_home_page_can_remember_post_requests(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['item_text'] = 'A new item'
+        
+        response = home_page(request)                    
+       
+        self.assertIn('A new item', response.content.decode())
 		
