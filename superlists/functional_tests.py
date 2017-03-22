@@ -14,6 +14,8 @@ class NewVisitorTest(unittest.TestCase):
 
     def tearDown(self):  
         self.browser.quit()
+        self.browser.implicitly_wait(3)
+        
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         #Edith goes to cool new todo list app homepage
@@ -52,7 +54,7 @@ class NewVisitorTest(unittest.TestCase):
         # When she hits enter, the page updates, and now the page lists
         # "1: Buy peacock feathers" as an item in a to-do list table
             inputbox.send_keys(Keys.ENTER)  
-            time.sleep(1)  
+            time.sleep(10)  
             
             table = self.browser.find_element_by_id('id_list_table')
             rows = table.find_elements_by_tag_name('tr')  
@@ -73,8 +75,8 @@ class NewVisitorTest(unittest.TestCase):
 
         
         # The page updates again, and now shows both items on her list
-            inputbox.send_keys(Keys.ENTER)  
-            time.sleep(1)  
+          
+            time.sleep(10)  
             
             table = self.browser.find_element_by_id('id_list_table')
             rows = table.find_elements_by_tag_name('tr')  
