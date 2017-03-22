@@ -39,4 +39,6 @@ class HomePageTest(TestCase):
         response = home_page(request)                    
        
         self.assertIn('A new item', response.content.decode())
-		
+        
+        expected_content = render_to_string('home.html', {'new_item_text': 'A new item'})
+        self.assertEqualExceptCSRF(response.content.decode(), expected_content)
