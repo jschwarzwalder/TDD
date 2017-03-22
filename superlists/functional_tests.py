@@ -54,7 +54,7 @@ class NewVisitorTest(unittest.TestCase):
         # When she hits enter, the page updates, and now the page lists
         # "1: Buy peacock feathers" as an item in a to-do list table
             inputbox.send_keys(Keys.ENTER)  
-            time.sleep(10)  
+            time.sleep(1)  
             
             table = self.browser.find_element_by_id('id_list_table')
             rows = table.find_elements_by_tag_name('tr')  
@@ -76,7 +76,7 @@ class NewVisitorTest(unittest.TestCase):
         
         # The page updates again, and now shows both items on her list
           
-            time.sleep(10)  
+            time.sleep(1)  
             
             table = self.browser.find_element_by_id('id_list_table')
             rows = table.find_elements_by_tag_name('tr')  
