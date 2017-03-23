@@ -11,16 +11,22 @@ class NewVisitorTest(unittest.TestCase):
 	
     def setUp(self):  
         self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(3)
 
     def tearDown(self):  
         self.browser.quit()
-        self.browser.implicitly_wait(3)
         
-
+        
+    def check_for_row_in_list_table(self, expected_row):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr') 
+        self.assertIn(
+            expected_row, [row.text for row in rows]
+        )
+        
     def test_can_start_a_list_and_retrieve_it_later(self):
         #Edith goes to cool new todo list app homepage
-          
-        
+                
             self.browser.get('http://localhost:8000')
         
         #She notices the page title and header mention to-do lists
@@ -28,17 +34,10 @@ class NewVisitorTest(unittest.TestCase):
             header_text = self.browser.find_element_by_tag_name('h1').text  
             self.assertIn('To-Do', header_text)
 
-
-        
         # We use self.assertIn instead of just assert to make our test assertions. 
         # unittest provides lots of helper functions like this to make test assertions, 
         #  like assertEqual, assertTrue, assertFalse
         # Unit Test Documentation http://docs.python.org/3/library/unittest.html 
-        
-        #This will always fail
-            
-        
-        #She does other stuff
         
         # She is invited to enter a to-do item straight away
             inputbox = self.browser.find_element_by_id('id_new_item')  
@@ -52,17 +51,11 @@ class NewVisitorTest(unittest.TestCase):
             inputbox.send_keys('Buy peacock feathers')  
         
         # When she hits enter, the page updates, and now the page lists
-        # "1: Buy peacock feathers" as an item in a to-do list table
             inputbox.send_keys(Keys.ENTER)  
             time.sleep(1)  
-            
-            table = self.browser.find_element_by_id('id_list_table')
-            rows = table.find_elements_by_tag_name('tr')  
-            self.assertTrue(
-                any(row.text == '1: Buy peacock feathers' for row in rows),
-                "New to-do item did not appear in table"
-            )
-            
+        
+        # "1: Buy peacock feathers" as an item in a to-do list table
+            self.check_for_row_in_list_table("1: Buy peacock feathers")
         
         # There is still a text box inviting her to add another item. She
         # enters "Use peacock feathers to make a fly" (Edith is very
@@ -70,24 +63,13 @@ class NewVisitorTest(unittest.TestCase):
             inputbox = self.browser.find_element_by_id('id_new_item')
             inputbox.send_keys("Use peacock feathers to make a fly")
             inputbox.send_keys(Keys.ENTER)
-            
-            
-
+            time.sleep(1)  
         
         # The page updates again, and now shows both items on her list
-          
-            time.sleep(1)  
             
-            table = self.browser.find_element_by_id('id_list_table')
-            rows = table.find_elements_by_tag_name('tr')  
-            self.assertIn(
-                "1: Buy peacock feathers", [row.text for row in rows]
-            )
-            self.assertIn(
-                "2: Use peacock feathers to make a fly", [row.text for row in rows]
-            )
-            
-            
+           
+            self.check_for_row_in_list_table("2: Use peacock feathers to make a fly")
+            self.check_for_row_in_list_table('1: Buy peacock feathers')
             
         # Edith wonders whether the site will remember her list. Then she sees
         # that the site has generated a unique URL for her -- there is some
