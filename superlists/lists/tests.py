@@ -42,3 +42,24 @@ class HomePageTest(TestCase):
         
         expected_content = render_to_string('home.html', {'new_item_text': 'A new item'})
         self.assertEqualExceptCSRF(response.content.decode(), expected_content)
+
+
+from lists.models import Item       
+
+class ItemModelTest(TestCase):
+    
+    def test_saving_and_retrieving_items_to_the_database(self):
+        first_item = Item()
+        first_item.text = 'Item the first'
+        first_item.save()
+        
+        second_item = Item()
+        second_item.text = 'Second Item'
+        second_item.save()
+        
+        first_item_from_db = Item.objects.all()[0]
+        self.assertEqual(first_item_from_db.text, 'Item the first')
+        
+        second_item_from_db = Item.objects.all()[1]
+        self.assertEqual(second_item_from_db.text, 'Second Item')
+        
