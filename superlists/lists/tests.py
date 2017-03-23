@@ -56,6 +56,8 @@ class ItemModelTest(TestCase):
         second_item = Item()
         second_item.text = 'Second Item'
         second_item.save()
+        # need to make migrations for this to work
+        # `python manage.py makemigrations`
         
         first_item_from_db = Item.objects.all()[0]
         self.assertEqual(first_item_from_db.text, 'Item the first')
