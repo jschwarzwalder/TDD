@@ -1,0 +1,6 @@
+ / = homepage
+ /lists/new - POST new list
+ /lists/(list-id)/ - existing list
+ /lists/(list-id)/add - add to list
+ Modelforlist, FK to items
+        

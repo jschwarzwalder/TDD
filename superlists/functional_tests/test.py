@@ -2,19 +2,26 @@
 # python manage.py runserver
 # cd Documents/GitHub/TDD/superlists
 
-import unittest
+
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 import time
+import unittest
 
-class NewVisitorTest(unittest.TestCase):
+#run server with clean database each time
+from django.test import LiveServerTestCase
+
+class NewVisitorTest(LiveServerTestCase):
 	
     def setUp(self):  
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
+        
+        #run server and clean database each time
 
     def tearDown(self):  
         self.browser.quit()
+        
         
         
     def check_for_row_in_list_table(self, expected_row):
@@ -27,7 +34,7 @@ class NewVisitorTest(unittest.TestCase):
     def test_can_start_a_list_and_retrieve_it_later(self):
         #Edith goes to cool new todo list app homepage
                 
-            self.browser.get('http://localhost:8000')
+            self.browser.get(self.live_server_url)
         
         #She notices the page title and header mention to-do lists
             self.assertIn('To-Do-Lists', self.browser.title)  
@@ -36,7 +43,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # We use self.assertIn instead of just assert to make our test assertions. 
         # unittest provides lots of helper functions like this to make test assertions, 
-        #  like assertEqual, assertTrue, assertFalse
+        # like assertEqual, assertTrue, assertFalse
         # Unit Test Documentation http://docs.python.org/3/library/unittest.html 
         
         # She is invited to enter a to-do item straight away
@@ -66,8 +73,7 @@ class NewVisitorTest(unittest.TestCase):
             time.sleep(1)  
         
         # The page updates again, and now shows both items on her list
-            
-           
+                       
             self.check_for_row_in_list_table("2: Use peacock feathers to make a fly")
             self.check_for_row_in_list_table('1: Buy peacock feathers')
             
@@ -80,7 +86,14 @@ class NewVisitorTest(unittest.TestCase):
         # Satisfied, she goes back to sleep
             self.fail('Finish the test!')
         
-            
+    def test_isolation_and_evolving_applicaiton(self):
+        # / = homepage
+        # /lists/new - POST new list
+        # /lists/(list-id)/ - existing list
+        # /lists/(list-id)/add - add to list
+        # Modelforlist, FK to items
+        pass
+        
         
 if __name__ == '__main__':  
     unittest.main(warnings='ignore')
