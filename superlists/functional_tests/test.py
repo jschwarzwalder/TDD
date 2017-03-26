@@ -17,12 +17,8 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
         
-        #run server and clean database each time
-
     def tearDown(self):  
         self.browser.quit()
-        
-        
         
     def check_for_row_in_list_table(self, expected_row):
         table = self.browser.find_element_by_id('id_list_table')
@@ -79,7 +75,7 @@ class NewVisitorTest(LiveServerTestCase):
            
         # Edith sees her list has a unique URL   
             edith_list_url = self.browser.current_url
-            self.assertRegex(edith_list_url, '/list/.+') 
+            self.assertRegex(edith_list_url, '/lists/.+') 
             
         # Now a new user, Francis, comes along to the site.
         
@@ -115,13 +111,7 @@ class NewVisitorTest(LiveServerTestCase):
         # Satisfied, she goes back to sleep
             self.fail('Finish the test!')
         
-    def test_isolation_and_evolving_applicaiton(self):
-        # / = homepage
-        # /lists/new - POST new list
-        # /lists/(list-id)/ - existing list
-        # /lists/(list-id)/add - add to list
-        # Modelforlist, FK to items
-        pass
+   
         
         
 if __name__ == '__main__':  

@@ -44,7 +44,7 @@ class HomePageTest(TestCase):
 
         #for redirect
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], '/')
+        self.assertEqual(response['Location'], '/lists/the-only-list/')
        
         #self.assertIn('A new item', response.content.decode())
         #expected_content = render_to_string('home.html', {'new_item_text': 'A new item'})
