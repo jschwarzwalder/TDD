@@ -58,7 +58,7 @@ class ListViewTest(TestCase):
         Item.objects.create(text='Item 2')        
               
         #using Django built in tests
-        response = self.client.get('lists/the-only-list')        
+        response = self.client.get('/lists/the-only-list')        
 
         self.assertIn('Item 1', response.content.decode())
         self.assertContains(response, 'Item 2')
