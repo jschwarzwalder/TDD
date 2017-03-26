@@ -32,6 +32,17 @@ class HomePageTest(TestCase):
         expected_content = render_to_string('home.html', request=request)
         self.assertEqualExceptCSRF(response.content.decode(), expected_content)
         
+    def test_home_page_shows_items_in_database(self):
+        Item.objects.create(text='Item 1')
+        Item.objects.create(text='Item 2')        
+              
+        request = HttpRequest()
+        response = home_page(request)          
+
+        self.assertIn('Item 1', response.content.decode())
+        self.assertIn('Item 2', response.content.decode())
+        
+       
     def test_home_page_can_save_post_requests_to_database(self):
         request = HttpRequest()
         request.method = 'POST'
@@ -40,11 +51,15 @@ class HomePageTest(TestCase):
         response = home_page(request)    
 
         item_from_db = Item.objects.all()[0]
-        self.assertEqual(item_from_db.text, 'A new item')        
+        self.assertEqual(item_from_db.text, 'A new item')   
+
+        #for redirect
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['Location'], '/')
        
-        self.assertIn('A new item', response.content.decode())
-        expected_content = render_to_string('home.html', {'new_item_text': 'A new item'})
-        self.assertEqualExceptCSRF(response.content.decode(), expected_content)
+        #self.assertIn('A new item', response.content.decode())
+        #expected_content = render_to_string('home.html', {'new_item_text': 'A new item'})
+        #self.assertEqualExceptCSRF(response.content.decode(), expected_content)
 
 
   
@@ -67,4 +82,3 @@ class ItemModelTest(TestCase):
         
         second_item_from_db = Item.objects.all()[1]
         self.assertEqual(second_item_from_db.text, 'Second Item')
-        
