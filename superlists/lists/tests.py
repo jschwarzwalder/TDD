@@ -32,17 +32,6 @@ class HomePageTest(TestCase):
         expected_content = render_to_string('home.html', request=request)
         self.assertEqualExceptCSRF(response.content.decode(), expected_content)
         
-    def test_home_page_shows_items_in_database(self):
-        Item.objects.create(text='Item 1')
-        Item.objects.create(text='Item 2')        
-              
-        request = HttpRequest()
-        response = home_page(request)          
-
-        self.assertIn('Item 1', response.content.decode())
-        self.assertIn('Item 2', response.content.decode())
-        
-       
     def test_home_page_can_save_post_requests_to_database(self):
         request = HttpRequest()
         request.method = 'POST'
@@ -61,7 +50,19 @@ class HomePageTest(TestCase):
         #expected_content = render_to_string('home.html', {'new_item_text': 'A new item'})
         #self.assertEqualExceptCSRF(response.content.decode(), expected_content)
 
+        
+class ListViewTest(TestCase):
 
+    def test_list_page_shows_items_in_database(self):
+        Item.objects.create(text='Item 1')
+        Item.objects.create(text='Item 2')        
+              
+        #using Django built in tests
+        response = self.client.get('lists/the-only-list')        
+
+        self.assertIn('Item 1', response.content.decode())
+        self.assertContains(response, 'Item 2')
+        
   
 
 class ItemModelTest(TestCase):
