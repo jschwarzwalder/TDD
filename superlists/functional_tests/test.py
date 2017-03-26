@@ -76,12 +76,41 @@ class NewVisitorTest(LiveServerTestCase):
                        
             self.check_for_row_in_list_table("2: Use peacock feathers to make a fly")
             self.check_for_row_in_list_table('1: Buy peacock feathers')
+           
+        # Edith sees her list has a unique URL   
+            edith_list_url = self.browser.current_url
+            self.assertRegex(edith_list_url, '/list/.+') 
             
-        # Edith wonders whether the site will remember her list. Then she sees
-        # that the site has generated a unique URL for her -- there is some
-        # explanatory text to that effect.
+        # Now a new user, Francis, comes along to the site.
         
-        # She visits that URL - her to-do list is still there.
+        ## We use a new browser session to make sure that no information 
+        ## of Edith's is comming through from cookies etc #<1>
+            self.browser.quit()
+            self.browser = webdriver.Firefox()
+            
+        # Francis visits the home page. There is no sign of Edith's list
+            self.browser.get(self.live_server_url)
+            page_text = self.browser.find_element_by_tag_name('body').text
+            self.assertNotIn('Buy peacock feathers', page_text)
+            self.assertNotIn('Use peacock feathers to make a fly', page_text)
+        
+        # Francis starts a new list by entering a new item.
+            inputbox = self.browser.find_element_by_id('id_new_item')
+            inputbox.send_keys("Buy milk")
+            inputbox.send_keys(Keys.ENTER)
+            time.sleep(1)  
+        
+        # Francis gets her own unique URL
+            francis_list_url = self.browser.current_url
+            self.assertRegex(francis_list_url, '/lists/.+')
+            self.assertNotEqual(francis_list_url, edith_list_url)
+        
+        # Again, there is no trace of Edith's list
+            page_text = self.browser.find_element_by_tag_name
+            page_text = self.browser.find_element_by_tag_name('body').text
+            self.assertNotIn('Buy peacock feathers', page_text)
+            self.assertIn('Buy milk', page_text)
+
         
         # Satisfied, she goes back to sleep
             self.fail('Finish the test!')
