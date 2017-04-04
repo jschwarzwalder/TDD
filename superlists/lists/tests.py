@@ -32,19 +32,19 @@ class HomePageTest(TestCase):
         expected_content = render_to_string('home.html', request=request)
         self.assertEqualExceptCSRF(response.content.decode(), expected_content)
         
-    def test_home_page_can_save_post_requests_to_database(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['item_text'] = 'A new item'
+class NewListViewTest(TestCase):
         
-        response = home_page(request)    
-
+    def test_home_page_can_save_post_to_database(self):
+        self.client.post('/lists/new', {'item_text': 'A new item'})  
         item_from_db = Item.objects.all()[0]
         self.assertEqual(item_from_db.text, 'A new item')   
+    def test_redirects_to_list_url(self):
+        response = self.client.post('/lists/new', {'item_text': 'A new item'})  
 
         #for redirect
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], '/lists/the-only-list/')
+        self.assertRedirects(response, '/lists/the-only-list/')
+
        
         #self.assertIn('A new item', response.content.decode())
         #expected_content = render_to_string('home.html', {'new_item_text': 'A new item'})
@@ -62,6 +62,10 @@ class ListViewTest(TestCase):
 
         self.assertIn('Item 1', response.content.decode())
         self.assertContains(response, 'Item 2')
+        
+    def test_uses_lists_template(self):
+        response = self.client.get('/lists/the-only-list')       
+        self.assertTemplateUsed(response, 'list.html')
         
   
 

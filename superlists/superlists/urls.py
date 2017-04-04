@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', home_page, name='home'),
     url(r'^lists/the-only-list/?$', list_view, name='list_view'),
+    url(r'^lists/new/?$', new_list, name='new_list'),
 ]
