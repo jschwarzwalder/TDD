@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 
 from lists.views import home_page
-from lists.models import Item     
+from lists.models import Item, List   
 
 class HomePageTest(TestCase):
 
@@ -38,6 +38,7 @@ class NewListViewTest(TestCase):
         self.client.post('/lists/new', {'item_text': 'A new item'})  
         item_from_db = Item.objects.all()[0]
         self.assertEqual(item_from_db.text, 'A new item')   
+    
     def test_redirects_to_list_url(self):
         response = self.client.post('/lists/new', {'item_text': 'A new item'})  
 
@@ -54,10 +55,11 @@ class NewListViewTest(TestCase):
 class ListViewTest(TestCase):
 
     def test_list_page_shows_items_in_database(self):
-        Item.objects.create(text='Item 1')
-        Item.objects.create(text='Item 2')        
+        list_ = List.objects.create()
+        Item.objects.create(text='Item 1', list=list_)
+        Item.objects.create(text='Item 2', list=list_)        
               
-        #using Django built in tests
+        #using Django built in testsS
         response = self.client.get('/lists/the-only-list')        
 
         self.assertIn('Item 1', response.content.decode())
@@ -72,18 +74,24 @@ class ListViewTest(TestCase):
 class ItemModelTest(TestCase):
     
     def test_saving_and_retrieving_items_to_the_database(self):
+        first_list = List()
+        first_list.save()
         first_item = Item()
         first_item.text = 'Item the first'
+        first_item.list = first_list
         first_item.save()
         
         second_item = Item()
         second_item.text = 'Second Item'
+        second_item.list = first_list
         second_item.save()
         # need to make migrations for this to work
         # `python manage.py makemigrations`
         
         first_item_from_db = Item.objects.all()[0]
         self.assertEqual(first_item_from_db.text, 'Item the first')
+        self.assertEqual(first_item_from_db.list, first_list)
         
         second_item_from_db = Item.objects.all()[1]
         self.assertEqual(second_item_from_db.text, 'Second Item')
+        self.assertEqual(second_item_from_db.list, first_list)
