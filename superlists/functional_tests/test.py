@@ -1,6 +1,7 @@
 # to run Django type in
 # python manage.py runserver
 # default http://localhost:8000/
+# tests run on http://localhost:8081 for clean install
 # 
 # cd Documents/GitHub/TDD/superlists
 # workon superlists
