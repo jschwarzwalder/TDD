@@ -1,3 +1,19 @@
+# to run Django type in
+# python manage.py runserver
+# default http://localhost:8000/
+#
+'''
+To run the functional tests
+python manage.py test functional_tests
+
+To run the unit tests
+python manage.py test lists
+'''
+#
+# cd Documents/GitHub/TDD/superlists
+# workon superlists
+#
+
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import HttpResponse
