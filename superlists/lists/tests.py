@@ -1,3 +1,11 @@
+# to run Django type in
+# python manage.py runserver
+# default http://localhost:8000/
+# 
+# cd Documents/GitHub/TDD/superlists
+# workon superlists
+# python manage.py test lists
+
 import re
 from django.test import TestCase
 from django.http import HttpRequest  
@@ -55,15 +63,21 @@ class NewListViewTest(TestCase):
 class ListViewTest(TestCase):
 
     def test_list_page_shows_items_in_database(self):
-        list_ = List.objects.create()
-        Item.objects.create(text='Item 1', list=list_)
-        Item.objects.create(text='Item 2', list=list_)        
+        our_list = List.objects.create()
+        Item.objects.create(text='Item 1', list=our_list)
+        Item.objects.create(text='Item 2', list=our_list)   
+
+        other_list = List.objects.create()
+        Item.objects.create(text='not this one', list=other_list)
+              
               
         #using Django built in testsS
-        response = self.client.get('/lists/the-only-list')        
+        response = self.client.get('/lists/%d/' % (our_list.id))        
 
-        self.assertIn('Item 1', response.content.decode())
+        #self.assertIn('Item 1', response.content.decode())
         self.assertContains(response, 'Item 2')
+        self.assertContains(response, 'Item 1')
+        self.assertNotContains(response, 'not this one')
         
     def test_uses_lists_template(self):
         response = self.client.get('/lists/the-only-list')       
