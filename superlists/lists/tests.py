@@ -52,7 +52,8 @@ class NewListViewTest(TestCase):
 
         #for redirect
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/lists/the-only-list/')
+        new_list = List.objects.first()
+        self.assertRedirects(response, '/lists/%d/' % (new_list.id,))
 
        
         #self.assertIn('A new item', response.content.decode())
@@ -80,10 +81,34 @@ class ListViewTest(TestCase):
         self.assertNotContains(response, 'not this one')
         
     def test_uses_lists_template(self):
-        response = self.client.get('/lists/the-only-list')       
+        our_list = List.objects.create()
+        response = self.client.get('/lists/%d/' % (our_list.id))       
         self.assertTemplateUsed(response, 'list.html')
         
-  
+    def test_passes_list_to_template(self):
+        our_list = List.objects.create()
+        response = self.client.get('/lists/%d/' % (our_list.id))   
+        self.assertEqual(response.context['list'], our_list)
+        
+class AddItemToExistingListTest(TestCase):
+
+    def test_adding_an_item_to_an_existing_list(self):
+        our_list = List.objects.create()
+        self.client.post('/lists/%d/add' % (our_list.id,), {'item_text': 'new_item__for_my_list'})  
+
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.list, our_list)
+        self.assertEqual(new_item.text, 'new_item__for_my_list')
+        
+    def test_redirects_to_list_page(self):
+        our_list = List.objects.create()
+        other_list = List.objects.create()
+        response = self.client.post('/lists/%d/add' % (our_list.id,),{'item_text': 'new_item__for_my_list'})
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/lists/%d/' % (our_list.id,))
+
+ 
 
 class ItemModelTest(TestCase):
     
